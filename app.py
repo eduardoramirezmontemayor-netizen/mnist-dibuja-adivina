@@ -5,7 +5,8 @@ from PIL import Image
 import tensorflow as tf
 
 # Cargar el modelo previamente entrenado
-model = tf.keras.models.load_model("modelo_mnist.h5")
+model = tf.keras.models.load_model("modelo_mnist.keras")
+#model = keras.models.load_model("modelo_mnist.keras")
 
 st.set_page_config(page_title="Reconocimiento de Dígitos", page_icon="🧠")
 st.title("🧠 Reconocimiento de Dígitos Dibujados")

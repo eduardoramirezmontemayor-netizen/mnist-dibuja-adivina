@@ -4,7 +4,7 @@ import numpy as np
 from PIL import Image
 import tensorflow as tf
 
-st.title("✅ Versión actualizada de la app 1")
+st.title("✅ Versión actualizada de la app 2")
 
 # Reconstruir el modelo manualmente
 model = tf.keras.Sequential([
@@ -55,7 +55,7 @@ def centrar_imagen(imagen):
 # Procesar la imagen si hay dibujo
 if canvas_result.image_data is not None:
     img = Image.fromarray(canvas_result.image_data.astype("uint8")).convert("L")
-    img = img.resize((28, 28), Image.ANTIALIAS)
+    img = img.resize((28, 28), Image.Resampling.LANCZOS)
     img_array = np.array(img) / 255.0
     img_array = centrar_imagen(img_array)
     st.image(img_array, caption="🖼 Imagen procesada", width=100)

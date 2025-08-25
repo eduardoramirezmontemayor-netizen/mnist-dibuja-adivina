@@ -4,12 +4,8 @@ import numpy as np
 from PIL import Image
 import tensorflow as tf
 
-import os
-import streamlit as st
-
-st.write("Archivos disponibles:", os.listdir())
-
 # Reconstruir el modelo manualmente
+
 model = tf.keras.Sequential([
     tf.keras.layers.Conv2D(32, (3,3), activation='relu', input_shape=(28,28,1)),
     tf.keras.layers.MaxPooling2D(2,2),
@@ -20,7 +16,6 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dense(10, activation='softmax')
 ])
 
-# Cargar los pesos entrenados
 model.load_weights("modelo_mnist.weights.h5")
 
 st.set_page_config(page_title="Reconocimiento de Dígitos", page_icon="🧠")

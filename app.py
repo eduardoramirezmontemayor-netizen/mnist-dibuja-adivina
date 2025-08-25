@@ -16,7 +16,7 @@ model = tf.keras.Sequential([
 ])
 
 # Cargar los pesos entrenados
-model.load_weights("modelo_mnist_weights.h5")
+model.load_weights("modelo_mnist.weights.h5")
 
 st.set_page_config(page_title="Reconocimiento de Dígitos", page_icon="🧠")
 st.title("🧠 Reconocimiento de Dígitos Dibujados")

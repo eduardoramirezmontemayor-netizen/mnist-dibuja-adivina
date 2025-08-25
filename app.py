@@ -4,9 +4,19 @@ import numpy as np
 from PIL import Image
 import tensorflow as tf
 
-# Cargar el modelo previamente entrenado
-model = tf.keras.models.load_model("modelo_mnist.h5")
-#model = keras.models.load_model("modelo_mnist.keras")
+# Reconstruir el modelo manualmente
+model = tf.keras.Sequential([
+    tf.keras.layers.Conv2D(32, (3,3), activation='relu', input_shape=(28,28,1)),
+    tf.keras.layers.MaxPooling2D(2,2),
+    tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
+    tf.keras.layers.MaxPooling2D(2,2),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dense(10, activation='softmax')
+])
+
+# Cargar los pesos entrenados
+model.load_weights("modelo_mnist_weights.h5")
 
 st.set_page_config(page_title="Reconocimiento de Dígitos", page_icon="🧠")
 st.title("🧠 Reconocimiento de Dígitos Dibujados")
@@ -14,10 +24,10 @@ st.markdown("Dibuja un número del 0 al 9 en el lienzo y deja que el modelo lo a
 
 # Crear el lienzo para dibujar
 canvas_result = st_canvas(
-    fill_color="rgb(0,0,0)",            # Color de relleno (negro)
-    stroke_width=10,                    # Grosor del trazo
-    stroke_color="rgb(255,255,255)",    # Color del trazo (blanco)
-    background_color="rgb(0,0,0)",      # Fondo del lienzo (negro)
+    fill_color="rgb(0,0,0)",
+    stroke_width=10,
+    stroke_color="rgb(255,255,255)",
+    background_color="rgb(0,0,0)",
     height=280,
     width=280,
     drawing_mode="freedraw",
@@ -41,38 +51,30 @@ def centrar_imagen(imagen):
 
 # Procesar la imagen si hay dibujo
 if canvas_result.image_data is not None:
-    # Convertir a imagen PIL en escala de grises
     img = Image.fromarray(canvas_result.image_data.astype("uint8")).convert("L")
-
-    # Redimensionar a 28x28
     img = img.resize((28, 28), Image.ANTIALIAS)
-
-    # Convertir a array y normalizar
     img_array = np.array(img) / 255.0
-
-    # Centrar el dígito
     img_array = centrar_imagen(img_array)
-
-    # Mostrar imagen procesada
     st.image(img_array, caption="🖼 Imagen procesada", width=100)
-
-    # Preparar para predicción
     input_data = img_array.reshape(1, 28, 28, 1)
 
-    # Predecir
     prediction = model.predict(input_data)
     predicted_digit = int(np.argmax(prediction))
     confidence = float(np.max(prediction)) * 100
 
-    # Mostrar resultado
-    st.subheader(f"🔢 Predicción: {predicted_digit}")
-    st.caption(f"Confianza del modelo: {confidence:.2f}%")
+    st.subheader("🔍 Resultado del modelo:")
+    if confidence > 90:
+        st.success(f"🎯 ¡Acierto total! El modelo cree que has dibujado un **{predicted_digit}** con {confidence:.2f}% de confianza.")
+        st.balloons()
+    elif confidence > 70:
+        st.info(f"🤔 El modelo cree que es un **{predicted_digit}**, pero no está 100% seguro ({confidence:.2f}%).")
+    else:
+        st.warning(f"😅 El modelo está confundido... cree que es un **{predicted_digit}**, pero solo con {confidence:.2f}% de confianza.")
 
     # Mostrar las 3 clases más probables
     top_3 = np.argsort(prediction[0])[-3:][::-1]
     st.markdown("### 📊 Top 3 predicciones:")
     for i in top_3:
         st.write(f"- {i}: {prediction[0][i]*100:.2f}%")
-
 else:
     st.info("🖌 Dibuja un número en el lienzo para comenzar.")

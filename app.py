@@ -5,7 +5,6 @@ from PIL import Image
 import tensorflow as tf
 
 # Reconstruir el modelo manualmente
-
 model = tf.keras.Sequential([
     tf.keras.layers.Conv2D(32, (3,3), activation='relu', input_shape=(28,28,1)),
     tf.keras.layers.MaxPooling2D(2,2),

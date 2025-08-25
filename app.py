@@ -4,6 +4,8 @@ import numpy as np
 from PIL import Image
 import tensorflow as tf
 
+st.title("✅ Versión actualizada de la app")
+
 # Reconstruir el modelo manualmente
 model = tf.keras.Sequential([
     tf.keras.layers.Conv2D(32, (3,3), activation='relu', input_shape=(28,28,1)),

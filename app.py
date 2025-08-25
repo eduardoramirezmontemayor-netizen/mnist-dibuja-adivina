@@ -8,7 +8,8 @@ st.title("✅ Versión actualizada de la app")
 
 # Reconstruir el modelo manualmente
 model = tf.keras.Sequential([
-    tf.keras.layers.Conv2D(32, (3,3), activation='relu', input_shape=(28,28,1)),
+    tf.keras.layers.InputLayer(input_shape=(28,28,1)),
+    tf.keras.layers.Conv2D(32, (3,3), activation='relu'),
     tf.keras.layers.MaxPooling2D(2,2),
     tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
     tf.keras.layers.MaxPooling2D(2,2),
@@ -17,6 +18,7 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dense(10, activation='softmax')
 ])
 
+model.build((None, 28, 28, 1))  # Construcción manual
 model.load_weights("modelo_mnist.weights.h5")
 
 st.set_page_config(page_title="Reconocimiento de Dígitos", page_icon="🧠")

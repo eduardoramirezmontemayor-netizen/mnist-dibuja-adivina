@@ -4,7 +4,7 @@ import numpy as np
 from PIL import Image
 import tensorflow as tf
 
-st.title("✅ Versión actualizada de la app")
+st.title("✅ Versión actualizada de la app 1")
 
 # Reconstruir el modelo manualmente
 model = tf.keras.Sequential([
